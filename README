@@ -1,0 +1,65 @@
+
+Mocanu Alexandru George - 325CB
+
+
+	Implementare Tema2
+
+	Pentru rezolvarea acestei teme, am creat o functie auxiliara "cautare_ncuv" care primeste ca input numarul stringului de cautat,si pointerul catre zona de memorie unde sunt salvate stringurile.	Astfel salvez in doi registri aceaste informatii, ca mai apoi sa incrementez registrul folosit pentru mentinerea pozitiei curente in zona de memorie pana cand ori ajung la finalul stringului, ori am sarit peste un numar dat de stringuri deja. Aceasta functie mentine in eax adresa stringului de cautat.
+
+
+Task-ul 1
+
+	Pentru rezolvarea primului task am utilizat functia "xor_strings" functie ce salveaza adresele stringului criptat si a cheii de decriptare.Astfel se verifica la fiecare pas daca nu am ajuns la finalul stringului,daca da se sare la finalul functiei si se termina, in cazul in care nu se termina se va copia fiecare byte curent al celor doua stringuri iar apoi se va face xor intre ele, rezultatul fiind copiat inplace peste stringul criptat.
+
+Task-ul 2
+
+	Functia folosita in cadrul acestui task, "rolling_xor", salveaza adresa stringului criptat, apoi al primului byte din string care este necriptat, si se face xor intre byte-ul vecin si cel actual pentru a putea fi decriptat cel urmator. Inainte de inlocuirea inplace se va salva caracterul criptat pentru a putea fi decriptat urmatorul si se trece la urmatoarea pereche de doi bytes.
+
+Task 3---------------------------------------------------------------------
+	
+	La acest task am utilizat o functie auxiliara "convert_hex_strings" ce imi ia doi bytes cate doi si ii transforma in valoarea hexazecimala a acestora. Astfel se ia primul byte se scade din acesta 87 daca este litera sau ,48 daca este cifra,pentru a se obtine o valoare pe 4 biti corespunzatoare primului caracter din byte-ul in hex,acesti primi 4 biti fiind shiftati la stanga cu 4 pozitii pentru a face loc celor ce urmeaza. Se repeta procedeul pentru al doilea caracter al numarului in hex, si se obtin inca 4 biti. Se aduna cei doi bytes si se obtine valoarea in hex a celor doi, astfel avem stocat pe primii 4 biti primul caracter si pe urmatorii 4 biti cel de-al doilea.
+	In functia principala "xor_hex_strings", se salveaza adresele stringurilor ce urmeaza a fi prelucrate,apoi se apeleaza functia de conversie in hex pentru fiecare in parte, pentru ca mai apoi sa se apeleze functia folosita pentru decriptare de la exercitiul 1.
+
+Task 4---------------------------------------------------------------------
+
+	In vederea rezolvarii acestui task, am alcatuit functia "base32decode" ce utilizeaza adresa stringului criptat. Ideea a fost de a mentine un registru in care sa memoram cati biti avem momentan in alcatuirea noului byte, iar daca dupa decriptare nu avem destui, atunci va fi nevoie sa  mai folosim inca un byte, pentru a prelua biti si de acolo.
+	Astfel am salvat primii doi bytes si am retinut in ebx ca vom folosi 5 biti din primul byte, dar mai intai trebuie decriptat byte-ul conform tabelei date. In cazul in care caracterul e litera se scade 65 daca este numar se va scadea 24 pentru a obtine aceleasi numere din tabela. Dupa acest pas retinem in ecx numarul de pozitii de shiftat byte-ul
+la stanga. Apoi dupa shiftare se salveaza numarul de biti pe care ii avem momentan ,facand push pe stiva la ebx, si verificam daca avem nevoie ,pentru alcatuirea byte-ul, de un numar mai mare de 5 biti. Daca da atunci voi shifta si acest byte la stanga in functie de cati biti mai am nevoie de completa byte-ul. 
+
+a)Am toti bitii necesari alcatuirii byte-ul
+
+ Atunci voi aduna peste primul byte cel de al doilea , scot din stiva pozitia pe care trebuie inlocuit inplace byte-ul decriptat, actualizez pentru urmatoarea compunere numarul de biti de folosit din byte-ul curent, apoi fac inlocuirea cuvantului decriptat, incrementez pozitia urmatorului byte decriptat,si verific daca nu am ajuns la finalul stringului.
+
+b)Nu am toti bitii necesari 	
+
+ Trec la urmatorul byte, dupa cei doi deja utilizati si, il decriptez in prima faza conform tabelei,apoi aflu de cati biti mai am nevoie in ecx,apoi aflu cu catii biti trebuie shiftat la dreapta byte-ul iar apoi fac adunarea si repet pasii de la punctul a) referitor la inlocuire si testare.
+
+La final adaug 0 ce semnifica terminarea stringului.
+
+Task 5---------------------------------------------------------------------
+
+	Functia "bruteforce_singlebyte_xor" se bazeaza pur si simplu pe ideea de a verifica fiecare cheie de un byte, de la 0 la ff, astfel vom face xor intre fiecare byte, dar pentru a economisi timp la decriptarea fiecarui byte testam daca este 'f'. Daca da apoi continuam cu xor la urmatoarea pozitie din string pentru a testa daca gasim urmatoarea litera din "force". Daca urmatorul byte nu corespunde literei urmatoare din force atunci se va incrementa adresa stringului pentru a se trece la urmatorul byte iar in cazul in care am ajuns la final vom trece la folosirea urmatoarei chei. Acest proces se va termina cu succes atunci cand vom parcurge toate starile de comparare cu brio retinand cheia de decriptare pentru a putea si decripta cuvantul inplace byte cu byte. La final salvez cheia gasit la adresa indicata de parametrul functiei.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
